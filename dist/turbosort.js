@@ -1,6 +1,6 @@
 "use strict";
 
-define(function () {
+var turbosort = function () {
 
     var SIZE = 1000000;
     var buckets = new Uint32Array(SIZE + 1);
@@ -116,5 +116,5 @@ define(function () {
         array[b] = temp;
     }
     return turboSort;
-});
+}();
 //# sourceMappingURL=turbosort.js.map

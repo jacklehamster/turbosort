@@ -1,0 +1,65 @@
+<html>
+    <canvas id="canvas" width="1000" height="500"></canvas>
+    <body onload="initialize()">
+
+    </body>
+    <script src="dist/turbosort.js"></script>
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var array = new Array(1000000);
+    function initialize() {
+        for(var i=0; i<array.length; i++) {
+            array[i] = {
+                value: Math.random(),
+            };
+        }
+        refresh();
+    }
+
+    function refresh() {
+        context.strokeStyle = 'black';
+        context.clearRect(0,0,1000,500)
+        context.beginPath();
+        var step = Math.max(1,array.length/1000);
+        for(var i=0; i<array.length; i+= step) {
+            var x = Math.floor(1000*i/array.length);
+            var y = array[Math.floor(i)].value;
+            context.moveTo(x,500);
+            context.lineTo(x,500-y*500);
+        }
+        context.stroke();
+    }
+
+    function sort(num) {
+        var start = Date.now();
+        switch(num) {
+            case 1:
+                turbosort(array, array.length, function(a) {
+                    return a.value;
+                });
+                break;
+            case 2:
+                array.sort(function(a,b) {
+                    return a.value-b.value;
+                });
+                break;
+        }
+        console.log((Date.now() - start)/1000 + 's');
+        refresh();
+    }
+
+    function shuffle() {
+        for(var i=0; i<array.length;i++) {
+            var index = Math.floor(Math.random()*array.length);
+            var tmp = array[index];
+            array[index] = array[i];
+            array[i] = tmp;
+        }
+        refresh();
+    }
+
+</script>
+
+
+</html>

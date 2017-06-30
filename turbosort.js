@@ -1,4 +1,4 @@
-define(function() {
+var turbosort = (function() {
 
     const SIZE = 1000000;
     const buckets = new Uint32Array(SIZE+1);
@@ -112,4 +112,4 @@ define(function() {
         array[b] = temp;
     }
     return turboSort;
-});
+})();

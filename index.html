@@ -1,13 +1,40 @@
 <html>
-    <canvas id="canvas" width="1000" height="500"></canvas>
     <body onload="initialize()">
-
+        <div>
+            <h2 id="head"></h2>
+        </div>
+        <div>
+            <button onclick="sort(3)">Shuffle</button>
+            <button onclick="sort(2)">Native sort</button>
+            <button onclick="sort(5)">QuickSort</button>
+            <button onclick="sort(1)">Turbosort</button>
+            <button onclick="sort(4)">Turbosort 2</button>
+            <span id="msg"></span>
+        </div>
+        <canvas id="canvas" style="width: 100%" width="1000" height="500"></canvas>
     </body>
-    <script src="dist/turbosort.js"></script>
+    <script type='text/javascript'>
+        var Module = {
+            preRun: [],
+            postRun: [],
+            print: function(text) {
+                console.log(text);
+            },
+            printErr: function(text) {
+                console.error(text);
+            },
+        };
+    </script>
+    <script async type="text/javascript" src="turbosortc.js"></script>
+
+
+    <script src="turbosort.js"></script>
+    <script src="turbosort2.js"></script>
 <script>
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
     var array = new Array(1000000);
+    document.getElementById('head').innerText = `${array.length} elements`;
     function initialize() {
         for(var i=0; i<array.length; i++) {
             array[i] = {
@@ -31,11 +58,23 @@
         context.stroke();
     }
 
+    function sorted(array) {
+        for(let i=1; i<array.length;i++) {
+            if(array[i-1].value > array[i].value) {
+                console.log(array[i-1].value)
+                console.log(array[i].value, i);
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     function sort(num) {
         var start = Date.now();
         switch(num) {
             case 1:
-                turbosort(array, array.length, function(a) {
+                Sorter.turbosort(array, array.length, function(a) {
                     return a.value;
                 });
                 break;
@@ -44,8 +83,23 @@
                     return a.value-b.value;
                 });
                 break;
+            case 3:
+                shuffle();
+                break;
+            case 4:
+                turbosort2(array, array.length, function(a) {
+                    return a.value;
+                });
+                break;
+            case 5:
+                Sorter.quicksort(array, array.length, function(a) {
+                    return a.value;
+                });
+                break;
         }
-        console.log((Date.now() - start)/1000 + 's');
+        var result = (sorted(array)?"SORTED":"NOT SORTED") + ": " + (Date.now() - start)/1000 + 's';
+        console.log(result);
+        document.getElementById('msg').innerText = result;
         refresh();
     }
 
@@ -58,8 +112,6 @@
         }
         refresh();
     }
-
 </script>
-
 
 </html>

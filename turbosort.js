@@ -1,4 +1,4 @@
-var turbosort = (function() {
+var Sorter = (function() {
 
     const SIZE = 1000000;
     const buckets = new Uint32Array(SIZE+1);
@@ -48,18 +48,114 @@ var turbosort = (function() {
             size = size ? Math.min(size,array.length) : array.length;
             if(size > 1) {
                 indexFunction = func ? func : identity;
-                turboSortHelper(array, 0, size ? size : array.length);
+                turboSortHelper(array, 0, size);
             }
         }
     }
 
+    function sorted(array, offset, length) {
+        for(let i=1; i<length;i++) {
+            if(indexFunction(array[offset + i-1]) > indexFunction(array[offset + i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function minimum(array, offset, length) {
+        let mini = indexFunction(array[offset]);
+        for(let i=1;i<length;i++) {
+            const val = indexFunction(array[offset + i]);
+            if(val < mini) {
+                mini = val;
+            }
+        }
+        return mini;
+    }
+
+    function maximum(array, offset, length) {
+        let maxi = indexFunction(array[offset]);
+        for(let i=1;i<length;i++) {
+            const val = indexFunction(array[offset + i]);
+            if(val > maxi) {
+                maxi = val;
+            }
+        }
+        return maxi;
+    }
+
+    function quickSort(array, size, func) {
+        if(array) {
+            size = size ? Math.min(size,array.length) : array.length;
+            if(size > 1) {
+                indexFunction = func ? func : identity;
+                quickSortHelper(array, 0, size-1);
+            }
+        }
+    }
+
+    function quickSortHelper(items, left, right) {
+
+        var index;
+
+        if (items.length > 1) {
+
+            index = partition(items, left, right);
+
+            if (left < index - 1) {
+                quickSortHelper(items, left, index - 1);
+            }
+
+            if (index < right) {
+                quickSortHelper(items, index, right);
+            }
+
+        }
+
+        return items;
+    }
+
+
+    function partition(items, left, right) {
+
+        var pivot   = items[Math.floor((right + left) / 2)],
+            i       = left,
+            j       = right;
+
+
+        while (i <= j) {
+
+            while (indexFunction(items[i]) < indexFunction(pivot)) {
+                i++;
+            }
+
+            while (indexFunction(items[j]) > indexFunction(pivot)) {
+                j--;
+            }
+
+            if (i <= j) {
+                swap(items, i, j);
+                i++;
+                j--;
+            }
+        }
+
+        return i;
+    }
+
+
     function turboSortHelper(array, offset, length) {
         const arrayInfo = getMinMax(array, offset, length);
-        if(arrayInfo.inOrder) {
+        if(sorted(array, offset, length)) {
             return;
         }
-        const min = arrayInfo.min;
-        const max = arrayInfo.max;
+        if(length<1000) {
+            quickSortHelper(array, offset, offset + length - 1);
+            return;
+        }
+
+        const min = minimum(array, offset, length);
+        const max = maximum(array, offset, length);
         const range = max-min;
         if(range===0) {
             return;
@@ -111,5 +207,8 @@ var turbosort = (function() {
         array[a] = array[b];
         array[b] = temp;
     }
-    return turboSort;
+    return {
+        turbosort: turboSort,
+        quicksort: quickSort,
+    };
 })();

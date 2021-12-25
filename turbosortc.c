@@ -10,22 +10,7 @@ const int SIZE = (100000 + 1)*4;
 
 int main(int argc, char ** argv) {
   printf("Good news everyone! 123\n");
-  //memset(bucketsPtr, sizeof(bucketsPtr), 0);
-  //memset(countsPtr, sizeof(countsPtr), 0);
 }
-
-/*void swap(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-void shuffle(int* indexes, int length) {
-    for(int i; i<length; i++) {
-        swap(indexes + i, indexes + rand() % length);
-    }
-}
-*/
 
 bool sorted(double* values, int length) {
     for(int i=1; i<length; i++) {
@@ -93,11 +78,6 @@ void quickSort(double arr[], int indexes[], int left, int right) {
             }
 
       };
-
-
-    //  5, 3, 0, 1, 2, 4
-
-
 
       /* recursion */
 
@@ -185,26 +165,4 @@ void turbosort(double* values, int* indexes, int length) {
     } else {
         printf("NOT SORTED\n");
     }
-//int bucketsPtr[a];// = malloc(a); //Module._malloc((SIZE+1) * Uint32Array.BYTES_PER_ELEMENT);
-
-/*    if(sorted(values, length)) {
-        return;
-    }
-    float mini = minimum(values, length);
-    float maxi = minimum(values, length);
-*/
-
-//    shuffle(indexes, length);
 }
-
-
-/*
-    G, A, B, C, D, E, F         G, A, B, C, D, E, F
-    A, G, B, C, D, E, F         A, G, B, C, D, E, F
-    A, G, C, B, D, E, F         A, B, G, C, D, E, F
-    A, G, C, B, E, D, F         A, B, C, G, D, E, F
-    A, B, C, G, E, D, F         A, B, C, D, G, E, F
-    A, B, C, D, E, G, F         A, B, C, D, E, G, F
-    A, B, C, D, E, F, G         A, B, C, D, E, F, G
-
-*/

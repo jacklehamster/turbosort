@@ -43,12 +43,12 @@ var turbosort2 = (function() {
         return a;
     }
 
-    function turboSort(array, size, func) {
+    function turboSort(array, size, func, useQuicksort) {
         if(array) {
             size = size ? Math.min(size,array.length) : array.length;
             if(size > 1) {
                 indexFunction = func ? func : identity;
-                turboSortHelper(array, 0, size ? size : array.length);
+                turboSortHelper(array, 0, size ? size : array.length, useQuicksort);
             }
         }
     }
@@ -61,7 +61,7 @@ var turbosort2 = (function() {
     function setOrder() {
     }
 
-    function turboSortHelper(array, offset, length) {
+    function turboSortHelper(array, offset, length, useQuicksort) {
         var start = Date.now();
         var valuesPtr = Module._malloc(length * Float64Array.BYTES_PER_ELEMENT);
         var indexesPtr = Module._malloc(length * Uint32Array.BYTES_PER_ELEMENT);
@@ -69,7 +69,7 @@ var turbosort2 = (function() {
             Module.HEAPF64[(valuesPtr / Float64Array.BYTES_PER_ELEMENT) + i] = indexFunction(array[i]);
         }
 
-        Module.ccall('turbosort', 'void', ['number', 'number', 'number'], [valuesPtr, indexesPtr, length]);
+        Module.ccall('turbosort', 'void', ['number', 'number', 'number', 'boolean'], [valuesPtr, indexesPtr, length, useQuicksort]);
 
         var offset = (indexesPtr / Uint32Array.BYTES_PER_ELEMENT);
         for(let i=0; i<length; i++) {

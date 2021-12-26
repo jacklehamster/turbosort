@@ -8,7 +8,8 @@
             <button onclick="sort(2)">Native sort</button>
             <button onclick="sort(5)">QuickSort</button>
             <button onclick="sort(1)">Turbosort</button>
-            <button onclick="sort(4)">Turbosort 2</button>
+            <button onclick="sort(4)">Turbosort asm (not working)</button>
+            <button onclick="sort(6)">QuickSort asm</button>
             <span id="msg"></span>
         </div>
         <canvas id="canvas" style="width: 100%" width="1000" height="500"></canvas>
@@ -89,12 +90,17 @@
             case 4:
                 turbosort2(array, array.length, function(a) {
                     return a.value;
-                });
+                }, false);
                 break;
             case 5:
                 Sorter.quicksort(array, array.length, function(a) {
                     return a.value;
                 });
+                break;
+            case 6:
+                turbosort2(array, array.length, function(a) {
+                    return a.value;
+                }, true);
                 break;
         }
         var result = (sorted(array)?"SORTED":"NOT SORTED") + ": " + (Date.now() - start)/1000 + 's';

@@ -9,7 +9,7 @@ const int SIZE = (100000 + 1)*4;
 
 
 int main(int argc, char ** argv) {
-  printf("Good news everyone! 123\n");
+  printf("Good news everyone!\n");
 }
 
 bool sorted(double* values, int length) {
@@ -104,7 +104,7 @@ void turbosortHelper(double values[], int indexes[], int length, int bucketsPtr[
     }
 
     int bucketSize = length < SIZE ? length : SIZE;
-    memset(countsPtr, bucketSize * sizeof(int), 0);
+    memset(countsPtr, 0, bucketSize * sizeof(int));
     countsPtr[bucketSize] = 1;
 
     //  count all elements
@@ -114,7 +114,7 @@ void turbosortHelper(double values[], int indexes[], int length, int bucketsPtr[
     }
 
     //  set buckets
-    memset(bucketsPtr, bucketSize * sizeof(int), 0);
+    memset(bucketsPtr, 0, bucketSize * sizeof(int));
     bucketsPtr[bucketSize] = length;
     bucketsPtr[0] = 0;
     for(int i=1; i<bucketSize; i++) {
@@ -144,7 +144,7 @@ void turbosortHelper(double values[], int indexes[], int length, int bucketsPtr[
 
 }
 
-void turbosort(double* values, int* indexes, int length) {
+void turbosort(double* values, int* indexes, int length, bool useQuicksort) {
     int bucketsPtr[SIZE+1];
     int countsPtr[SIZE+1];
     int* tmp = malloc(length * sizeof(int));
@@ -152,8 +152,12 @@ void turbosort(double* values, int* indexes, int length) {
         tmp[i] = i;
     }
 
-//    turbosortHelper(values, indexes, length, bucketsPtr, countsPtr);
-    quickSort(values, tmp, 0, length-1);
+    if (useQuicksort) {
+       quickSort(values, tmp, 0, length-1);
+    } else {
+        turbosortHelper(values, tmp, length, bucketsPtr, countsPtr);
+        printf("WARNING: This doesn't work at the moment.\n");
+    }
 
     for(int i=0; i<length; i++) {
         indexes[tmp[i]] = i;
